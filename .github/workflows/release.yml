@@ -40,8 +40,18 @@ jobs:
         run: GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.darwin.arm64 go.mozilla.org/sops/v3/cmd/sops
       - name: Build windows binary
         run: GOOS=windows CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.exe go.mozilla.org/sops/v3/cmd/sops
+      - name: Build windows amd64 binary
+        run: GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}-amd64.exe go.mozilla.org/sops/v3/cmd/sops
       - name: Copy already built linux binary
         run: cp tmppkg/usr/local/bin/sops dist/sops-${{ env.RELEASE_VERSION }}.linux
+      - name: Build linux armv5 binary
+        run: GOOS=linux GOARCH=armv5 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv5 go.mozilla.org/sops/v3/cmd/sops
+      - name: Build linux armv6 binary
+        run: GOOS=linux GOARCH=armv6 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv6 go.mozilla.org/sops/v3/cmd/sops
+      - name: Build linux 386 binary
+        run: GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.386 go.mozilla.org/sops/v3/cmd/sops
+      - name: Build linux amd64 binary
+        run: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.amd64 go.mozilla.org/sops/v3/cmd/sops
       - name: Create release
         uses: "mozilla/action-automatic-releases@latest"
         with:
@@ -49,8 +59,14 @@ jobs:
           prerelease: true
           files: |
             dist/sops-${{ env.RELEASE_VERSION }}.exe
+            dist/sops-${{ env.RELEASE_VERSION }}-amd64.exe
             dist/sops-${{ env.RELEASE_VERSION }}.darwin.amd64
             dist/sops-${{ env.RELEASE_VERSION }}.darwin.arm64
             dist/sops-${{ env.RELEASE_VERSION }}.linux
+            dist/sops-${{ env.RELEASE_VERSION }}.linux.armv5
+            dist/sops-${{ env.RELEASE_VERSION }}.linux.armv6
+            dist/sops-${{ env.RELEASE_VERSION }}.linux.arm64
+            dist/sops-${{ env.RELEASE_VERSION }}.linux.386
+            dist/sops-${{ env.RELEASE_VERSION }}.linux.amd64
             dist/sops_${{ env.RELEASE_NUMBER }}_amd64.deb
             dist/sops-${{ env.RELEASE_NUMBER }}-1.x86_64.rpm

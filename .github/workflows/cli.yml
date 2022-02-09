@@ -27,6 +27,8 @@ jobs:
           - os: windows
             arch: armv7
           - os: darwin
+            arch: 386
+          - os: darwin
             arch: armv5
           - os: darwin
             arch: armv6
@@ -53,8 +55,11 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: Build Darwin
-        if: matrix.os == 'darwin'
+      #- name: Build Darwin
+      #  if: matrix.os == 'darwin'
+      #  run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }} -v ./cmd/sops
+      - name: Build Linux 386, amd64 and Darwin
+        if: matrix.arch != 'armv*'
         run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }} -v ./cmd/sops
       - name: Build Linux armv5
         if: matrix.arch == 'armv5'

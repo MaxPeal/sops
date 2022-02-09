@@ -17,7 +17,8 @@ jobs:
     strategy:
       matrix:
         os: [linux, darwin, windows]
-        arch: [amd64, arm64, armv5, armv6, 386]
+        arch: [amd64, arm64, arm, 386]
+        goarm: [5, 6, 7]
         exclude:
           - os: windows
             arch: arm64
@@ -44,6 +45,9 @@ jobs:
       - name: Build Linux and Darwin
         if: matrix.os != 'windows'
         run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }} -v ./cmd/sops
+      - name: Build Linux arm
+        if: matrix.arch == 'arm'
+        run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} GOARM=${{ matrix.goarm }} go build -o sops-${{ matrix.os }}-${{ matrix.arch }}v${{ matrix.goarm }}-${{ github.sha }} -v ./cmd/sops
       - name: Build Windows
         if: matrix.os == 'windows'
         run: GOOS=${{ matrix.os }} go build -o sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }} -v ./cmd/sops
@@ -57,6 +61,12 @@ jobs:
         with:
           name: sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }}
           path: sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }}
+      - name: Upload artifact for Linux arm
+        if: matrix.arch == 'arm'
+        uses: actions/upload-artifact@v2
+        with:
+          name: sops-${{ matrix.os }}-${{ matrix.arch }}v${{ matrix.goarm }}-${{ github.sha }}
+          path: sops-${{ matrix.os }}-${{ matrix.arch }}v${{ matrix.goarm }}-${{ github.sha }}
       - name: Upload artifact for Windows
         if: matrix.os == 'windows'
         uses: actions/upload-artifact@v2

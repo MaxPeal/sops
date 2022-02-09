@@ -44,7 +44,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Build Linux and Darwin
-        if: matrix.os != 'windows'
+        if: matrix.os != 'windows' && matrix.arch != 'arm'
         run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o sops-${{ matrix.os }}-${{ matrix.arch }}-${{ github.sha }} -v ./cmd/sops
       - name: Build Linux armv5
         if: matrix.arch == 'armv5'

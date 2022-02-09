@@ -45,9 +45,11 @@ jobs:
       - name: Copy already built linux binary
         run: cp tmppkg/usr/local/bin/sops dist/sops-${{ env.RELEASE_VERSION }}.linux
       - name: Build linux armv5 binary
-        run: GOOS=linux GOARCH=armv5 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv5 go.mozilla.org/sops/v3/cmd/sops
+        run: GOOS=linux GOARCH=arm GOARM=5 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv5 go.mozilla.org/sops/v3/cmd/sops
       - name: Build linux armv6 binary
-        run: GOOS=linux GOARCH=armv6 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv6 go.mozilla.org/sops/v3/cmd/sops
+        run: GOOS=linux GOARCH=arm GOARM=6 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv6 go.mozilla.org/sops/v3/cmd/sops
+      - name: Build linux armv6 binary
+        run: GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.armv7 go.mozilla.org/sops/v3/cmd/sops
       - name: Build linux 386 binary
         run: GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -mod vendor -o dist/sops-${{ env.RELEASE_VERSION }}.linux.386 go.mozilla.org/sops/v3/cmd/sops
       - name: Build linux amd64 binary

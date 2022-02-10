@@ -10,7 +10,7 @@ all: test vet generate install functional-tests
 origin-build: test vet generate install functional-tests-all
 
 install:
-	$(GO) install go.mozilla.org/sops/v3/cmd/sops
+	$(GO) install -ldflags="-s -w" go.mozilla.org/sops/v3/cmd/sops
 
 tag: all
 	git tag -s $(TAGVER) -a -m "$(TAGMSG)"
@@ -51,7 +51,7 @@ functional-tests-all:
 deb-pkg: vendor
 	rm -rf tmppkg
 	mkdir -p tmppkg/usr/local/bin
-	GOOS=linux CGO_ENABLED=0 go build -mod vendor -o tmppkg/usr/local/bin/sops go.mozilla.org/sops/v3/cmd/sops
+	GOOS=linux CGO_ENABLED=0 LD_FLAGS="-s -w" go build -mod vendor -o tmppkg/usr/local/bin/sops go.mozilla.org/sops/v3/cmd/sops
 	fpm -C tmppkg -n sops --license MPL2.0 --vendor mozilla \
 		--description "Sops is an editor of encrypted files that supports YAML, JSON and BINARY formats and encrypts with AWS KMS and PGP." \
 		-m "AJ Bahnken <ajvb+sops@mozilla.com>" \
@@ -63,7 +63,7 @@ deb-pkg: vendor
 rpm-pkg: vendor
 	rm -rf tmppkg
 	mkdir -p tmppkg/usr/local/bin
-	GOOS=linux CGO_ENABLED=0 go build -mod vendor -o tmppkg/usr/local/bin/sops go.mozilla.org/sops/v3/cmd/sops
+	GOOS=linux CGO_ENABLED=0 LD_FLAGS="-s -w" go build -mod vendor -o tmppkg/usr/local/bin/sops go.mozilla.org/sops/v3/cmd/sops
 	fpm -C tmppkg -n sops --license MPL2.0 --vendor mozilla \
 		--description "Sops is an editor of encrypted files that supports YAML, JSON and BINARY formats and encrypts with AWS KMS and PGP." \
 		-m "AJ Bahnken <ajvb+sops@mozilla.com>" \
